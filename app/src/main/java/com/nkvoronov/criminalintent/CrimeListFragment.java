@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -25,19 +26,30 @@ public class CrimeListFragment extends Fragment {
         return view;
     }
 
-    private class CrimeHolder extends RecyclerView.ViewHolder {
-
-        public CrimeHolder(LayoutInflater inflater, ViewGroup parent) {
-            super(inflater.inflate(R.layout.list_item_crime, parent, false));
-        }
-    }
-
     private void updateUI() {
         CrimeLab crimeLab = CrimeLab.get(getActivity());
         List<Crime> crimes = crimeLab.getCrimes();
         mAdapter = new CrimeAdapter(crimes);
         mCrimeRecyclerView.setAdapter(mAdapter);
 
+    }
+
+    private class CrimeHolder extends RecyclerView.ViewHolder {
+        private Crime mCrime;
+        private TextView mTitleTextView;
+        private TextView mDateTextView;
+
+        public CrimeHolder(LayoutInflater inflater, ViewGroup parent) {
+            super(inflater.inflate(R.layout.list_item_crime, parent, false));
+            mTitleTextView = itemView.findViewById(R.id.crime_title);
+            mDateTextView = itemView.findViewById(R.id.crime_date);
+        }
+
+        public void bind(Crime crime) {
+            mCrime = crime;
+            mTitleTextView.setText(mCrime.getTitle());
+            mDateTextView.setText(mCrime.getDate().toString());
+        }
     }
 
     private class CrimeAdapter extends RecyclerView.Adapter<CrimeHolder> {
@@ -55,7 +67,8 @@ public class CrimeListFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(CrimeHolder holder, int position) {
-            //
+            Crime crime = mCrimes.get(position);
+            holder.bind(crime);
         }
 
         @Override

@@ -8,7 +8,7 @@ public class Crime {
     private String mTitle;
     private Date mDate;
     private boolean mSolved;
-    private boolean mRequiresPolice;
+    private int mViewType;
 
     public UUID getId() {
         return mId;
@@ -26,12 +26,12 @@ public class Crime {
         return mSolved;
     }
 
-    public boolean isRequiresPolice() {
-        return mRequiresPolice;
+    public int getViewType() {
+        return mViewType;
     }
 
-    public void setRequiresPolice(boolean requiresPolice) {
-        mRequiresPolice = requiresPolice;
+    public void setViewType(int viewType) {
+        mViewType = viewType;
     }
 
     public void setId(UUID id) {
@@ -53,6 +53,6 @@ public class Crime {
     public Crime() {
         mId = UUID.randomUUID();
         mDate = new Date();
-        mRequiresPolice = false;
+        mViewType = 0;
     }
 }

@@ -17,7 +17,8 @@
             android:id="@+id/crime_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Crime Title" />
+            android:text="Crime Title"
+            android:textColor="#C62828" />
 
         <TextView
             android:id="@+id/crime_date"

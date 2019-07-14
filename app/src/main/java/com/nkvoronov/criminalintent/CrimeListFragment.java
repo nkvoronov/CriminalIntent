@@ -39,21 +39,19 @@ public class CrimeListFragment extends Fragment {
         private Crime mCrime;
         private TextView mTitleTextView;
         private TextView mDateTextView;
-        private Button mPoliceButton;
 
-        public CrimeHolder(LayoutInflater inflater, ViewGroup parent, Boolean isPolice) {
-            super(inflater.inflate(R.layout.list_item_crime2, parent, false));
+        public CrimeHolder(View view, int viewType) {
+            super(view);
             mTitleTextView = itemView.findViewById(R.id.crime_title);
             mDateTextView = itemView.findViewById(R.id.crime_date);
-            mPoliceButton = itemView.findViewById(R.id.button_police);
-            mPoliceButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Toast.makeText(getActivity(), mCrime.getTitle() + " - Police Alarm!", Toast.LENGTH_SHORT).show();
-                }
-            });
-            if (!isPolice) {
-                mPoliceButton.setVisibility(View.GONE);
+            if (viewType == 0) {
+                Button mPoliceButton = itemView.findViewById(R.id.button_police);
+                mPoliceButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(getActivity(), mCrime.getTitle() + " - Police Alarm!", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         }
 
@@ -74,11 +72,14 @@ public class CrimeListFragment extends Fragment {
         @Override
         public CrimeHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+            int res;
             if (viewType == 0) {
-                return new CrimeHolder(layoutInflater, parent, true);
+                res = R.layout.list_item_crime2;
             } else {
-                return new CrimeHolder(layoutInflater, parent, false);
+                res = R.layout.list_item_crime;
             }
+            return new CrimeHolder(layoutInflater.inflate(res, parent, false), viewType);
+
         }
 
         @Override

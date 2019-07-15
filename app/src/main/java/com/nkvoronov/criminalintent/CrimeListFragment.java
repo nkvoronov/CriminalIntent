@@ -8,10 +8,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.DateFormat;
+import java.text.FieldPosition;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class CrimeListFragment extends Fragment {
@@ -52,7 +59,8 @@ public class CrimeListFragment extends Fragment {
         public void bind(Crime crime) {
             mCrime = crime;
             mTitleTextView.setText(mCrime.getTitle());
-            mDateTextView.setText(mCrime.getDate().toString());
+            SimpleDateFormat df = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
+            mDateTextView.setText(df.format(mCrime.getDate()));
             mSolvedImageView.setVisibility(crime.isSolved() ? View.VISIBLE : View.GONE);
         }
 

@@ -15,6 +15,8 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
@@ -51,7 +53,8 @@ public class CrimeFragment extends Fragment {
     }
 
     private void updateDate() {
-        mDateButton.setText(mCrime.getDate().toString());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, d MMM yyyy");
+        mDateButton.setText(simpleDateFormat.format(mCrime.getDate()));
     }
 
     @Override

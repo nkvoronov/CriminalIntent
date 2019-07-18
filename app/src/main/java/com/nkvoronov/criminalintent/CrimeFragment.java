@@ -22,18 +22,26 @@ import java.util.UUID;
 
 public class CrimeFragment extends Fragment {
     private static final String ARG_CRIME_ID = "crime_id";
+    private static final String ARG_CRIME_NEW = "is_new";
     private static final String DIALOG_DATE = "DialogDate";
+    private static final String DIALOG_TIME = "DialogTime";
 
     private static final int REQUEST_DATE = 0;
+    private static final int REQUEST_TIME = 1;
 
     private Crime mCrime;
     private EditText mTitleField;
     private Button mDateButton;
+    private Button mTimeButton;
     private CheckBox mSolvedCheckBox;
+    private Button mDeleteButton;
 
-    public static CrimeFragment newInstance(UUID crimeID) {
+    private Boolean isNew = false;
+
+    public static CrimeFragment newInstance(UUID crimeID, Boolean isNew) {
         Bundle args = new Bundle();
         args.putSerializable(ARG_CRIME_ID, crimeID);
+        args.putSerializable(ARG_CRIME_NEW, isNew);
 
         CrimeFragment fragment = new CrimeFragment();
         fragment.setArguments(args);
@@ -50,6 +58,12 @@ public class CrimeFragment extends Fragment {
             mCrime.setDate(date);
             updateDate();
         }
+
+        if (requestCode == REQUEST_TIME) {
+            Date date = (Date) data.getSerializableExtra(TimePickerFragment.EXTRA_TIME);
+            mCrime.setDate(date);
+            updateTime();
+        }
     }
 
     private void updateDate() {
@@ -57,10 +71,16 @@ public class CrimeFragment extends Fragment {
         mDateButton.setText(simpleDateFormat.format(mCrime.getDate()));
     }
 
+    private void updateTime() {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
+        mTimeButton.setText(simpleDateFormat.format(mCrime.getDate()));
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         UUID crimeId = (UUID) getArguments().getSerializable(ARG_CRIME_ID);
+        isNew = (Boolean) getArguments().getSerializable(ARG_CRIME_NEW);
         mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
     }
 
@@ -98,6 +118,18 @@ public class CrimeFragment extends Fragment {
             }
         });
 
+        mTimeButton = view.findViewById(R.id.crime_time);
+        updateTime();
+        mTimeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager manager = getFragmentManager();
+                TimePickerFragment dialog = TimePickerFragment.newInstance(mCrime.getDate());
+                dialog.setTargetFragment(CrimeFragment.this, REQUEST_TIME);
+                dialog.show(manager, DIALOG_TIME);
+            }
+        });
+
         mSolvedCheckBox = view.findViewById(R.id.crime_solved);
         mSolvedCheckBox.setChecked(mCrime.isSolved());
         mSolvedCheckBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -106,6 +138,17 @@ public class CrimeFragment extends Fragment {
                 mCrime.setSolved(b);
             }
         });
+
+        mDeleteButton = view.findViewById(R.id.del_crime);
+        mDeleteButton.setVisibility(isNew ? View.INVISIBLE : View.VISIBLE);
+        mDeleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CrimeLab.get(getContext()).delCrime(mCrime);
+                getActivity().onBackPressed();
+            }
+        });
+
         return view;
     }
 }

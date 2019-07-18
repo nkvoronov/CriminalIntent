@@ -11,8 +11,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -24,6 +22,7 @@ import java.util.List;
 public class CrimeListFragment extends Fragment {
     private static final String SAVED_SUBTITLE_VISIBLE = "subtitle";
     private RecyclerView mCrimeRecyclerView;
+    private TextView mEmptyTextView;
     private CrimeAdapter mAdapter;
     private boolean mSubtitleVisible;
 
@@ -52,7 +51,7 @@ public class CrimeListFragment extends Fragment {
             case R.id.new_crime:
                 Crime crime = new Crime();
                 CrimeLab.get(getActivity()).addCrime(crime);
-                Intent intent = CrimePagerActivity.newIntent(getActivity(), crime.getId());
+                Intent intent = CrimePagerActivity.newIntent(getActivity(), crime.getId(), true);
                 startActivity(intent);
                 return true;
             case R.id.show_subtitle:
@@ -68,7 +67,7 @@ public class CrimeListFragment extends Fragment {
     private void updateSubtitle() {
         CrimeLab crimeLab = CrimeLab.get(getActivity());
         int crimeCount = crimeLab.getCrimes().size();
-        String subtitle = getString(R.string.subtitle_format, crimeCount);
+        String subtitle = getResources().getQuantityString(R.plurals.subtitle_plural, crimeCount, crimeCount);
 
         if (!mSubtitleVisible) {
             subtitle = null;
@@ -88,6 +87,7 @@ public class CrimeListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_crime_list, container, false);
         mCrimeRecyclerView = view.findViewById(R.id.crime_recycler_view);
+        mEmptyTextView = view.findViewById(R.id.empty_label);
         mCrimeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         if (savedInstanceState != null) {
@@ -136,14 +136,14 @@ public class CrimeListFragment extends Fragment {
         public void bind(Crime crime) {
             mCrime = crime;
             mTitleTextView.setText(mCrime.getTitle());
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, d MMM yyyy");
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
             mDateTextView.setText(simpleDateFormat.format(mCrime.getDate()));
             mSolvedImageView.setVisibility(crime.isSolved() ? View.VISIBLE : View.INVISIBLE);
         }
 
         @Override
         public void onClick(View view) {
-            Intent intent = CrimePagerActivity.newIntent(getActivity(), mCrime.getId());
+            Intent intent = CrimePagerActivity.newIntent(getActivity(), mCrime.getId(), false);
             startActivity(intent);
         }
     }
@@ -169,6 +169,11 @@ public class CrimeListFragment extends Fragment {
 
         @Override
         public int getItemCount() {
+            if (mCrimes.size() == 0) {
+                mEmptyTextView.setVisibility(View.VISIBLE);
+            } else {
+                mEmptyTextView.setVisibility(View.INVISIBLE);
+            }
             return mCrimes.size();
         }
 

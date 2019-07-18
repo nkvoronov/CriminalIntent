@@ -11,8 +11,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -87,7 +85,7 @@ public class CrimeListFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_crime_list_new, container, false);
+        View view = inflater.inflate(R.layout.fragment_crime_list, container, false);
         mCrimeRecyclerView = view.findViewById(R.id.crime_recycler_view);
         mEmptyTextView = view.findViewById(R.id.empty_label);
         mCrimeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));

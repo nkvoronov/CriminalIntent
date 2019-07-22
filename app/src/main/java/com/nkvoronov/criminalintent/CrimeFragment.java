@@ -229,7 +229,6 @@ public class CrimeFragment extends Fragment {
                 shareIntent.setType("text/plain");
                 shareIntent.setText(getCrimeReport());
                 shareIntent.setSubject(getString(R.string.crime_report_subject));
-                shareIntent.getIntent();
                 startActivity(shareIntent.getIntent());
             }
         });

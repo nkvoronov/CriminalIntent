@@ -18,6 +18,8 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
+
+import androidx.core.app.ShareCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import java.text.SimpleDateFormat;
@@ -33,6 +35,7 @@ public class CrimeFragment extends Fragment {
     private static final int REQUEST_DATE = 0;
     private static final int REQUEST_TIME = 1;
     private static final int REQUEST_CONTACT = 2;
+    private static final int REQUEST_CALL = 3;
 
     private Crime mCrime;
     private EditText mTitleField;
@@ -41,6 +44,7 @@ public class CrimeFragment extends Fragment {
     private CheckBox mSolvedCheckBox;
     private Button mSuspectButton;
     private Button mReportButton;
+    private Button mCallButton;
     private Button mDeleteButton;
 
     private Boolean isNew = false;
@@ -91,6 +95,10 @@ public class CrimeFragment extends Fragment {
             } finally {
                 c.close();
             }
+        }
+
+        if (requestCode == REQUEST_CALL && data != null) {
+
         }
     }
 
@@ -217,12 +225,21 @@ public class CrimeFragment extends Fragment {
         mReportButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(Intent.ACTION_SEND);
-                i.setType("text/plain");
-                i.putExtra(Intent.EXTRA_TEXT, getCrimeReport());
-                i.putExtra(Intent.EXTRA_SUBJECT,
-                        getString(R.string.crime_report_subject));
-                startActivity(i);
+                ShareCompat.IntentBuilder shareIntent = ShareCompat.IntentBuilder.from(getActivity());
+                shareIntent.setType("text/plain");
+                shareIntent.setText(getCrimeReport());
+                shareIntent.setSubject(getString(R.string.crime_report_subject));
+                shareIntent.getIntent();
+                startActivity(shareIntent.getIntent());
+            }
+        });
+
+        final Intent pickCall = new Intent(Intent.ACTION_DIAL, Uri.parse(ContactsContract.CommonDataKinds.Phone.NUMBER));
+        mCallButton = view.findViewById(R.id.crime_call);
+        mCallButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivityForResult(pickCall, REQUEST_CALL);
             }
         });
 

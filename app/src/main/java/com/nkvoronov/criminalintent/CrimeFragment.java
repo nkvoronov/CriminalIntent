@@ -10,6 +10,7 @@ import android.provider.ContactsContract;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -92,6 +93,7 @@ public class CrimeFragment extends Fragment {
                 String suspect = c.getString(0);
                 mCrime.setSuspect(suspect);
                 mSuspectButton.setText(suspect);
+                mCallButton.setEnabled(true);
             } finally {
                 c.close();
             }
@@ -99,6 +101,30 @@ public class CrimeFragment extends Fragment {
 
         if (requestCode == REQUEST_CALL && data != null) {
 
+        }
+    }
+
+    private String getPhone() {
+        String name = mCrime.getSuspect();
+        if (name != null) {
+            String[] queryFields = new String[] { ContactsContract.CommonDataKinds.Phone.NUMBER};
+            String selection = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " = ?";
+            String[] selectionArgs = new String[] { name };
+            Cursor c = getActivity().getContentResolver()
+                    .query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, queryFields, selection, selectionArgs, null);
+            try {
+                if (c.getCount() == 0) {
+                    return null;
+                }
+                c.moveToFirst();
+                String phone = c.getString(0);
+                return phone;
+            } finally {
+                c.close();
+            }
+
+        } else {
+            return null;
         }
     }
 
@@ -211,14 +237,19 @@ public class CrimeFragment extends Fragment {
             }
         });
 
+        mCallButton = view.findViewById(R.id.crime_call);
         if (mCrime.getSuspect() != null) {
             mSuspectButton.setText(mCrime.getSuspect());
+            mCallButton.setEnabled(true);
+        } else {
+            mCallButton.setEnabled(false);
         }
 
         PackageManager packageManager = getActivity().getPackageManager();
         if (packageManager.resolveActivity(pickContact,
                 PackageManager.MATCH_DEFAULT_ONLY) == null) {
             mSuspectButton.setEnabled(false);
+            mCallButton.setEnabled(false);
         }
 
         mReportButton = view.findViewById(R.id.crime_report);
@@ -233,11 +264,10 @@ public class CrimeFragment extends Fragment {
             }
         });
 
-        final Intent pickCall = new Intent(Intent.ACTION_DIAL, Uri.parse(ContactsContract.CommonDataKinds.Phone.NUMBER));
-        mCallButton = view.findViewById(R.id.crime_call);
         mCallButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                final Intent pickCall = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+Uri.encode(getPhone())));
                 startActivityForResult(pickCall, REQUEST_CALL);
             }
         });

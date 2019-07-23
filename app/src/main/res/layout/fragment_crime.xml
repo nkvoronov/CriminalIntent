@@ -92,11 +92,15 @@
         android:layout_height="wrap_content"
         android:text="@string/crime_report_text" />
     <Button
+        android:id="@+id/crime_call"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/crime_call_text" />
+    <Button
         android:id="@+id/del_crime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:text="@string/del_crime"
         android:textColor="#C62828" />
-
 </LinearLayout>

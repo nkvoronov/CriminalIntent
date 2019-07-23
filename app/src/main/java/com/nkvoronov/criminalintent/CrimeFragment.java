@@ -23,11 +23,10 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-
+import androidx.core.app.ShareCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -43,7 +42,8 @@ public class CrimeFragment extends Fragment {
     private static final int REQUEST_DATE = 0;
     private static final int REQUEST_TIME = 1;
     private static final int REQUEST_CONTACT = 2;
-    private static final int REQUEST_PHOTO= 3;
+    private static final int REQUEST_CALL = 3;
+    private static final int REQUEST_PHOTO= 4;
 
     private Crime mCrime;
     private File mPhotoFile;
@@ -55,6 +55,7 @@ public class CrimeFragment extends Fragment {
     private ImageView mPhotoView;
     private Button mSuspectButton;
     private Button mReportButton;
+    private Button mCallButton;
     private Button mDeleteButton;
 
     private Boolean isNew = false;
@@ -102,15 +103,44 @@ public class CrimeFragment extends Fragment {
                 String suspect = c.getString(0);
                 mCrime.setSuspect(suspect);
                 mSuspectButton.setText(suspect);
+                mCallButton.setEnabled(true);
             } finally {
                 c.close();
             }
+        }
+        
+        if (requestCode == REQUEST_CALL && data != null) {
+
         }
 
         if (requestCode == REQUEST_PHOTO) {
             Uri uri = FileProvider.getUriForFile(getActivity(), "com.nkvoronov.criminalintent.fileprovider", mPhotoFile);
             getActivity().revokeUriPermission(uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             updatePhotoView();
+        }
+    }
+
+    private String getPhone() {
+        String name = mCrime.getSuspect();
+        if (name != null) {
+            String[] queryFields = new String[] { ContactsContract.CommonDataKinds.Phone.NUMBER};
+            String selection = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " = ?";
+            String[] selectionArgs = new String[] { name };
+            Cursor c = getActivity().getContentResolver()
+                    .query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, queryFields, selection, selectionArgs, null);
+            try {
+                if (c.getCount() == 0) {
+                    return null;
+                }
+                c.moveToFirst();
+                String phone = c.getString(0);
+                return phone;
+            } finally {
+                c.close();
+            }
+
+        } else {
+            return null;
         }
     }
 
@@ -233,26 +263,38 @@ public class CrimeFragment extends Fragment {
             }
         });
 
+        mCallButton = view.findViewById(R.id.crime_call);
         if (mCrime.getSuspect() != null) {
             mSuspectButton.setText(mCrime.getSuspect());
+            mCallButton.setEnabled(true);
+        } else {
+            mCallButton.setEnabled(false);
         }
 
         PackageManager packageManager = getActivity().getPackageManager();
         if (packageManager.resolveActivity(pickContact,
                 PackageManager.MATCH_DEFAULT_ONLY) == null) {
             mSuspectButton.setEnabled(false);
+            mCallButton.setEnabled(false);
         }
 
         mReportButton = view.findViewById(R.id.crime_report);
         mReportButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(Intent.ACTION_SEND);
-                i.setType("text/plain");
-                i.putExtra(Intent.EXTRA_TEXT, getCrimeReport());
-                i.putExtra(Intent.EXTRA_SUBJECT,
-                        getString(R.string.crime_report_subject));
-                startActivity(i);
+                ShareCompat.IntentBuilder shareIntent = ShareCompat.IntentBuilder.from(getActivity());
+                shareIntent.setType("text/plain");
+                shareIntent.setText(getCrimeReport());
+                shareIntent.setSubject(getString(R.string.crime_report_subject));
+                startActivity(shareIntent.getIntent());
+            }
+        });
+
+        mCallButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Intent pickCall = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+Uri.encode(getPhone())));
+                startActivityForResult(pickCall, REQUEST_CALL);
             }
         });
 

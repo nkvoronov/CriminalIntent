@@ -8,8 +8,6 @@
         android:id="@+id/picture_max"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/darker_gray"
-        android:contentDescription="TODO"
-        android:cropToPadding="true"
-        android:scaleType="centerInside" />
+        android:background="@android:color/black"
+        android:scaleType="fitXY" />
 </LinearLayout>

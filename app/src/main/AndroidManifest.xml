@@ -19,6 +19,9 @@
         <activity android:name=".CrimePagerActivity"
             android:parentActivityName=".CrimeListActivity">
         </activity>
+        <activity android:name=".CrimePicture"
+            android:parentActivityName=".CrimeListActivity">
+        </activity>
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.nkvoronov.criminalintent.fileprovider"

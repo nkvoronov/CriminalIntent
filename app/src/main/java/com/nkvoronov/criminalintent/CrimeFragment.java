@@ -6,7 +6,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -180,10 +180,12 @@ public class CrimeFragment extends Fragment {
         if (mPhotoFile == null || !mPhotoFile.exists()) {
             mPhotoView.setImageDrawable(null);
         } else {
-            Bitmap bitmap = PictureUtils.getScaledBitmap(mPhotoFile.getPath(), getActivity());
-            int rt = PictureUtils.getRotation(mPhotoFile.getPath());
-            mPhotoView.setImageBitmap(bitmap);
-            mPhotoView.setRotation(rt);
+            Bitmap scaleBitmap = PictureUtils.getScaledBitmap(mPhotoFile.getPath(), getActivity());
+            int rotate = PictureUtils.getRotation(mPhotoFile.getPath());
+            Matrix matrix = new Matrix();
+            matrix.postRotate(rotate);
+            Bitmap outBitmap = Bitmap.createBitmap(scaleBitmap, 0, 0, scaleBitmap.getWidth(), scaleBitmap.getHeight(), matrix, true);
+            mPhotoView.setImageBitmap(outBitmap);
         }
     }
 
@@ -326,7 +328,7 @@ public class CrimeFragment extends Fragment {
         mPhotoView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = CrimeFragmentPicture.newIntent(getContext(), mCrime.getId());
+                Intent intent = CrimePicture.newIntent(getContext(), mPhotoFile);
                 startActivity(intent);
             }
         });

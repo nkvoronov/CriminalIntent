@@ -3,7 +3,11 @@ package com.nkvoronov.criminalintent;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.Point;
+import android.media.ExifInterface;
+
+import java.io.IOException;
 
 public class PictureUtils {
     public static Bitmap getScaledBitmap(String path, int destWidth, int destHeight) {
@@ -21,6 +25,26 @@ public class PictureUtils {
         options = new BitmapFactory.Options();
         options.inSampleSize = inSampleSize;
         return BitmapFactory.decodeFile(path, options);
+    }
+
+    public static int getRotation(String path) {
+        ExifInterface exif = null;
+        try {
+            exif = new ExifInterface(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+        switch (orientation) {
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                return 90;
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                return 180;
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                return 270;
+            default:
+                return 0;
+        }
     }
 
     public static Bitmap getScaledBitmap(String path, Activity activity) {

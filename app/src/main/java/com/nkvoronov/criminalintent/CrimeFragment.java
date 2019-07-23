@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -180,7 +181,9 @@ public class CrimeFragment extends Fragment {
             mPhotoView.setImageDrawable(null);
         } else {
             Bitmap bitmap = PictureUtils.getScaledBitmap(mPhotoFile.getPath(), getActivity());
+            int rt = PictureUtils.getRotation(mPhotoFile.getPath());
             mPhotoView.setImageBitmap(bitmap);
+            mPhotoView.setRotation(rt);
         }
     }
 
@@ -320,6 +323,13 @@ public class CrimeFragment extends Fragment {
 
         mPhotoView = view.findViewById(R.id.crime_photo);
         updatePhotoView();
+        mPhotoView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = CrimeFragmentPicture.newIntent(getContext(), mCrime.getId());
+                startActivity(intent);
+            }
+        });
 
         mDeleteButton = view.findViewById(R.id.del_crime);
         mDeleteButton.setVisibility(isNew ? View.INVISIBLE : View.VISIBLE);

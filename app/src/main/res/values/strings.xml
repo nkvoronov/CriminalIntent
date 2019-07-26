@@ -27,4 +27,9 @@
     <string name="crime_suspect_text">Choose Suspect</string>
     <string name="crime_report_text">Send Crime Report</string>
     <string name="crime_call_text">Call Crime</string>
+    <string name="crime_photo_button_description">Take photo of crime scene</string>
+    <string name="crime_photo_no_image_description">
+        Crime scene photo (not set)
+    </string>
+    <string name="crime_photo_image_description">Crime scene photo (set)</string>
 </resources>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">Преступления</string>
+    <string name="crime_call_text">Позвонить</string>
+    <string name="crime_details_label">Подробности</string>
+    <string name="crime_photo_button_description">Сфотографировать место преступления</string>
+    <string name="crime_photo_image_description">Фото с места преступления (да)</string>
+    <string name="crime_photo_no_image_description">Фото с места преступления (нет)</string>
+    <string name="crime_report_subject">Репорт о преступлении</string>
+    <string name="crime_report_text">Отправить отчет</string>
+    <string name="crime_solved_label">Раскрыто</string>
+    <string name="crime_suspect_text">Выберите подозреваемого</string>
+    <string name="crime_title_hint">Введите название.</string>
+    <string name="crime_title_label">Название</string>
+    <string name="date_picker_title">Дата преступления:</string>
+    <string name="del_crime">Удалить</string>
+    <string name="empty_list">Список пуст</string>
+    <plurals name="subtitle_plural" tools:ignore="MissingQuantity">
+        <item quantity="zero">%1$d преступлений</item>
+        <item quantity="one">%1$d преступление</item>
+        <item quantity="two">%1$d преступления</item>
+        <item quantity="few">%1$d преступления</item>
+        <item quantity="other">%1$d преступления</item>
+    </plurals>
+    <string name="new_crime">Новое преступление</string>
+    <string name="time_picker_title">Время преступления:</string>
+    <string name="show_subtitle">Показать</string>
+    <string name="send_report">Отправить отчет из</string>
+    <string name="hide_subtitle">Скрыть</string>
+    <string name="crime_report_unsolved">Преступление не раскрыто</string>
+    <string name="crime_report_suspect">подозреваемый %s.</string>
+    <string name="crime_report_solved">Преступление раскрыто</string>
+    <string name="crime_report_no_suspect">нет подозреваемого</string>
+    <string name="crime_report">%1$s!
+        Преступление было раскрыто %2$s. %3$s, и %4$s
+    </string>
+</resources>

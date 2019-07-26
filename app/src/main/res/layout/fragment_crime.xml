@@ -10,8 +10,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp">
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:baselineAligned="false">
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -21,14 +22,16 @@
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:background="@android:color/darker_gray"
-                android:contentDescription="TODO"
+                android:contentDescription="@string/crime_photo_no_image_description"
                 android:cropToPadding="true"
                 android:scaleType="centerInside" />
+
             <ImageButton
                 android:id="@+id/crime_camera"
+                style="@style/Widget.AppCompat.ImageButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:contentDescription="TODO"
+                android:contentDescription="@string/crime_photo_button_description"
                 android:src="@android:drawable/ic_menu_camera" />
         </LinearLayout>
         <LinearLayout
@@ -80,26 +83,33 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/crime_solved_label"/>
+
     <Button
         android:id="@+id/crime_suspect"
+        style="@style/Widget.AppCompat.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/crime_suspect_text" />
+
     <Button
         android:id="@+id/crime_report"
+        style="@style/Widget.AppCompat.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/crime_report_text" />
+
     <Button
         android:id="@+id/crime_call"
+        style="@style/Widget.AppCompat.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/crime_call_text" />
+
     <Button
         android:id="@+id/del_crime"
+        style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
-        android:text="@string/del_crime"
-        android:textColor="#C62828" />
+        android:text="@string/del_crime" />
 </LinearLayout>

@@ -205,6 +205,7 @@ public class CrimeFragment extends Fragment {
     private void updatePhotoView() {
         if (mPhotoFile == null || !mPhotoFile.exists()) {
             mPhotoView.setImageDrawable(null);
+            mPhotoView.setContentDescription(getString(R.string.crime_photo_no_image_description));
         } else {
             Bitmap scaleBitmap = PictureUtils.getScaledBitmap(mPhotoFile.getPath(), getActivity());
             int rotate = PictureUtils.getRotation(mPhotoFile.getPath());
@@ -212,6 +213,7 @@ public class CrimeFragment extends Fragment {
             matrix.postRotate(rotate);
             Bitmap outBitmap = Bitmap.createBitmap(scaleBitmap, 0, 0, scaleBitmap.getWidth(), scaleBitmap.getHeight(), matrix, true);
             mPhotoView.setImageBitmap(outBitmap);
+            mPhotoView.setContentDescription(getString(R.string.crime_photo_image_description));
         }
     }
 
